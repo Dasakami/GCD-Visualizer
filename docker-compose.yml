@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:15
+    container_name: gcd_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: h72ivh-19
+      POSTGRES_DB: gcd_db
+    ports:
+      - "5443:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gcd_backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gcd_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
