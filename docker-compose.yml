@@ -1,46 +1,17 @@
-version: '3.8'
-
 services:
-  db:
-    image: postgres:15
-    container_name: gcd_postgres_db
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: h72ivh-19
-      POSTGRES_DB: gcd_db
-    ports:
-      - "5443:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - gcd-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: gcd_backend
     restart: always
-    environment:
-      DATABASE_URL: postgresql://postgres:h72ivh-19@gcd_postgres_db:5432/gcd_db
-      SECRET_KEY: secretik
-      ALGORITHM: HS256
-      ACCESS_TOKEN_EXPIRE_MINUTES: 30
-      APP_NAME: GCD Visualizer
-      DEBUG: "True"
-    depends_on:
-      db:
-        condition: service_healthy
+    env_file:
+      - ./backend/.env
     ports:
       - "8000:8000"
-    networks:
-      - gcd-network
+    volumes:
+      - sqlite_data:/app/data
+
 
   frontend:
     build:
@@ -48,20 +19,10 @@ services:
       dockerfile: Dockerfile
     container_name: gcd_frontend
     restart: always
-    environment:
-      VITE_API_URL: http://localhost:8000
     ports:
       - "3000:3000"
     depends_on:
       - backend
-    networks:
-      - gcd-network
-    volumes:
-      - ./frontend/src:/app/src
-
-networks:
-  gcd-network:
-    driver: bridge
 
 volumes:
-  pgdata:
+  sqlite_data:

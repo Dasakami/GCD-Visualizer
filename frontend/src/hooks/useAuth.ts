@@ -54,6 +54,7 @@ export const useAuth = (): UseAuthReturn => {
     setError(null);
 
     try {
+      // Теперь API /auth/register возвращает токен напрямую
       const response = await apiClient.post<AuthResponse>(
         '/auth/register',
         credentials
@@ -65,7 +66,7 @@ export const useAuth = (): UseAuthReturn => {
       setAuth(user, access_token);
       navigate('/calculate');
     } catch (err: any) {
-      console.error('Register error:', err);
+      console.error('Registration error:', err);
       const errorMessage =
         err.response?.data?.detail || 'Регистрация не удалась. Пожалуйста, попробуйте снова.';
       setError(errorMessage);

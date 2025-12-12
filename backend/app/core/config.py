@@ -1,8 +1,9 @@
+# app/core/config.py
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql://postgres:h72ivh-19@db:5432/gcd_db"
+    DATABASE_URL: str = "sqlite:///./gcd_app.db"
 
     SECRET_KEY: str = "secretik"
     ALGORITHM: str = "HS256"
