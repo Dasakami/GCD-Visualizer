@@ -39,6 +39,7 @@ export const useAuth = (): UseAuthReturn => {
       setAuth(user, access_token);
       navigate('/calculate');
     } catch (err: any) {
+      console.error('Login error:', err);
       const errorMessage =
         err.response?.data?.detail || 'Ошибка входа. Пожалуйста, попробуйте снова.';
       setError(errorMessage);
@@ -64,6 +65,7 @@ export const useAuth = (): UseAuthReturn => {
       setAuth(user, access_token);
       navigate('/calculate');
     } catch (err: any) {
+      console.error('Register error:', err);
       const errorMessage =
         err.response?.data?.detail || 'Регистрация не удалась. Пожалуйста, попробуйте снова.';
       setError(errorMessage);

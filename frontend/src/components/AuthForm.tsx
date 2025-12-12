@@ -14,14 +14,20 @@ export const AuthForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('Submitting form:', { mode, email, passwordLength: password.length });
+
     try {
       if (mode === 'login') {
+        console.log('Attempting login...');
         await login({ email, password });
+        console.log('Login successful!');
       } else {
+        console.log('Attempting registration...');
         await register({ email, password });
+        console.log('Registration successful!');
       }
-    } catch {
-      // Error is handled in the hook
+    } catch (err) {
+      console.error('Auth error:', err);
     }
   };
 
@@ -34,12 +40,12 @@ export const AuthForm = () => {
       >
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-white mb-2">
-            {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+            {mode === 'login' ? 'Добро пожаловать' : 'Создать аккаунт'}
           </h2>
           <p className="text-slate-400">
             {mode === 'login'
-              ? 'Sign in to continue your GCD journey'
-              : 'Start visualizing algorithms today'}
+              ? 'Войдите, чтобы продолжить свой путь к НОД'
+              : 'Начните визуализировать алгоритмы сегодня'}
           </p>
         </div>
 
@@ -52,7 +58,7 @@ export const AuthForm = () => {
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            Login
+            Вход
           </button>
           <button
             onClick={() => setMode('register')}
@@ -125,7 +131,7 @@ export const AuthForm = () => {
                 <span>Обработка...</span>
               </>
             ) : (
-              <span>{mode === 'login' ? 'Sign In' : 'Create Account'}</span>
+              <span>{mode === 'login' ? 'Войти' : 'Создать аккаунт'}</span>
             )}
           </motion.button>
         </form>
