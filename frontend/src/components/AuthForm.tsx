@@ -14,7 +14,7 @@ export const AuthForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('Submitting form:', { mode, email, passwordLength: password.length });
+    console.log('Form submit:', { mode, email, passwordLength: password.length });
 
     try {
       if (mode === 'login') {
@@ -22,12 +22,13 @@ export const AuthForm = () => {
         await login({ email, password });
         console.log('Login successful!');
       } else {
-        console.log('Attempting registration...');
+        console.log('Attempting register...');
         await register({ email, password });
-        console.log('Registration successful!');
+        console.log('Register successful!');
       }
     } catch (err) {
       console.error('Auth error:', err);
+      // Error is handled in the hook
     }
   };
 
@@ -40,28 +41,36 @@ export const AuthForm = () => {
       >
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-white mb-2">
-            {mode === 'login' ? 'Добро пожаловать' : 'Создать аккаунт'}
+            {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
           <p className="text-slate-400">
             {mode === 'login'
-              ? 'Войдите, чтобы продолжить свой путь к НОД'
-              : 'Начните визуализировать алгоритмы сегодня'}
+              ? 'Sign in to continue your GCD journey'
+              : 'Start visualizing algorithms today'}
           </p>
         </div>
 
         <div className="flex space-x-2 mb-6 bg-slate-800/50 rounded-lg p-1">
           <button
-            onClick={() => setMode('login')}
+            type="button"
+            onClick={() => {
+              setMode('login');
+              console.log('Switched to login mode');
+            }}
             className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
               mode === 'login'
                 ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            Вход
+            Login
           </button>
           <button
-            onClick={() => setMode('register')}
+            type="button"
+            onClick={() => {
+              setMode('register');
+              console.log('Switched to register mode');
+            }}
             className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
               mode === 'register'
                 ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
@@ -131,10 +140,20 @@ export const AuthForm = () => {
                 <span>Обработка...</span>
               </>
             ) : (
-              <span>{mode === 'login' ? 'Войти' : 'Создать аккаунт'}</span>
+              <span>{mode === 'login' ? 'Sign In' : 'Create Account'}</span>
             )}
           </motion.button>
         </form>
+
+        {/* Отладочная информация */}
+        {import.meta.env.DEV && (
+          <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg text-xs text-blue-400">
+            <div>Mode: {mode}</div>
+            <div>Email: {email || '(empty)'}</div>
+            <div>Password length: {password.length}</div>
+            <div>API URL: {import.meta.env.VITE_API_URL || 'http://localhost:8000'}</div>
+          </div>
+        )}
       </motion.div>
     </div>
   );
